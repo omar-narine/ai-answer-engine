@@ -4,6 +4,18 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { Redis } from '@upstash/redis';
+import { Ratelimit } from '@upstash/ratelimit';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+})
+
+const rateLimit = new RateLimit({
+  redis: redis, 
+  limiter: Ratelimit.slidingWindow
+})
 
 export async function middleware(request: NextRequest) {
   try {
